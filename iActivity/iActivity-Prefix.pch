@@ -13,4 +13,11 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+#import "AppDelegate.h"
+
+#define XMPP_LOG_NAME @"LOG_NAME"
+#define XMPP_LOG_PASSWORD @"LOG_PASSWORD"
+
+#define APP (AppDelegate*)[UIApplication sharedApplication].delegate
+
 #endif

@@ -11,6 +11,7 @@
 #import "LoginVC.h"
 #import "MessageVC.h"
 @implementation AppDelegate
+@synthesize msgDelegate;
 @synthesize xmppStream;
 @synthesize xmppReconnect;
 @synthesize xmppRoster;
@@ -22,6 +23,17 @@
 @synthesize isRegister;
 @synthesize userJID,password;
 @synthesize rootTabBarVC;
+
+- (NSManagedObjectContext *)managedObjectContext_roster
+{
+	return [xmppRosterStorage mainThreadManagedObjectContext];
+}
+
+- (NSManagedObjectContext *)managedObjectContext_capabilities
+{
+	return [xmppCapabilitiesStorage mainThreadManagedObjectContext];
+}
+
 - (void)setupStream
 {
 	// Setup xmpp stream
@@ -153,6 +165,10 @@
 	isXmppConnected = YES;
 	NSError *error = nil;
     
+    [[NSUserDefaults standardUserDefaults] setObject:userJID forKey:XMPP_LOG_NAME];
+    [[NSUserDefaults standardUserDefaults] setObject:password forKey:XMPP_LOG_PASSWORD];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     //登录验证
     if(!isRegister)
     {
@@ -173,15 +189,14 @@
 }
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
-	if (!isXmppConnected)
-	{
+        isXmppConnected=NO;
 		NSLog(@"stream did disconnect with error:%@",error);
-	}
 }
 //登录结果回调
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	NSLog(@"did authenticate");
+    
 	[self goOnline];
     //消除登陆页
     UINavigationController* nav=[[self.rootTabBarVC viewControllers] objectAtIndex:0];
@@ -206,10 +221,12 @@
 - (void)xmppStreamDidRegister:(XMPPStream *)sender
 {
     NSLog(@"did register");
+    isXmppConnected=NO;
     
 }
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)error
 {
+    isXmppConnected=NO;
     NSLog(@"did not register with error:%@",error);
     //[self alert:@"注册失败!"];
     UINavigationController* nav=[[self.rootTabBarVC viewControllers] objectAtIndex:0];
@@ -228,8 +245,15 @@
     NSString *fromJID = [[message attributeForName:@"from"] stringValue];
     if(![fromJID isEqualToString:[[sender myJID] bare]])
     {
-        if(msg)
-            NSLog(@"receive Msg:%@ from:%@",msg,fromJID);
+        NSString* currentChatJID=[[GlobalDataManager sharedDataManager] currentChatJID];
+         NSLog(@"receive Msg:%@ from:%@",msg,fromJID);
+        //NSLog(@"currentJID:%@",currentChatJID);
+        if(currentChatJID&&msg&&[fromJID hasPrefix:currentChatJID])
+        {
+            [msgDelegate receivedMsgDict:@{@"msg": msg,@"fromJID":fromJID,@"type":@"receive"}];
+            
+        }
+        
     }
 }
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
@@ -241,25 +265,113 @@
     if(![presenceUser isEqualToString:myJID])
     {
         NSLog(@"receive presence:%@ from:%@",presenceType,presenceUser);
+        if([presenceType hasSuffix:@"subscribed"])
+        {
+            //处理好友申请
+            NSString* msg;
+            if([presenceType isEqualToString:@"subscribed"])
+            {
+                msg=[NSString stringWithFormat:@"%@同意你的请求",presenceUser];
+            }
+            else if([presenceType isEqualToString:@"unsubscribed"])
+            {
+                 msg=[NSString stringWithFormat:@"%@不同意你的请求",presenceUser];
+            }
+            
+            UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"info" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+        
     }
 	
-}
-- (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence
-{
-    NSLog(@"receive buddy request:%@",presence);
 }
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
 	NSLog(@"receive error:%@",error);
 }
+-(void)sendMsg:(NSString*)message
+{
+    if (message.length > 0)
+    {
+        GlobalDataManager* m=[GlobalDataManager sharedDataManager];
+        //XMPPFramework主要是通过KissXML来生成XML文件
+        //生成<body>文档
+        NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
+        [body setStringValue:message];
+        
+        //生成XML消息文档
+        NSXMLElement *mes = [NSXMLElement elementWithName:@"message"];
+        //消息类型
+        [mes addAttributeWithName:@"type" stringValue:@"chat"];
+        //发送给谁
+        [mes addAttributeWithName:@"to" stringValue:[m currentChatJID]];
+        //由谁发送
+        [mes addAttributeWithName:@"from" stringValue:[[NSUserDefaults standardUserDefaults] stringForKey:XMPP_LOG_NAME]];
+        //组合
+        [mes addChild:body];
+        
+        //发送消息
+        [xmppStream sendElement:mes];
+    }
+}
+-(void)XMPPRemoveFriendWithJID:(NSString*)aJID
+{
+    XMPPJID *jid = [XMPPJID jidWithString:aJID];
+    [xmppRoster removeUser:jid];
+}
+- (void)XMPPAddFriendWithJID:(NSString *)aJID
+{
+    //XMPPHOST 就是服务器名，  主机名
+    XMPPJID *jid = [XMPPJID jidWithString:aJID];
+    //[presence addAttributeWithName:@"subscription" stringValue:@"好友"];
+    [xmppRoster subscribePresenceToUser:jid];
+    
+}
+#pragma mark - RosterDelegate
+//收到好友添加请求代理
+- (void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
+{
+    //取得好友状态
+    NSString *presenceType = [NSString stringWithFormat:@"%@", [presence type]]; //online/offline
+    //请求的用户
+    NSString *presenceFromUser =[NSString stringWithFormat:@"%@", [[presence from] user]];
+    currentRequstJID=[presence from];
+    NSString* msg=[NSString  stringWithFormat:@"来自%@的好友申请!",presenceFromUser];
+    NSLog(@"subscribe:%@ from:%@",presenceType,presenceFromUser);
+    UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"消息" message:msg delegate:self cancelButtonTitle:@"不同意" otherButtonTitles:@"同意", nil];
+    [alert show];
+   
+}
+- (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence
+{
+    NSLog(@"receive buddy request:%@",presence);
+}
 
 
+#pragma mark - UIAlertView
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex==0)
+    {
+        [xmppRoster rejectPresenceSubscriptionRequestFrom:currentRequstJID];
+    }
+    else
+    {
+        
+        [xmppRoster acceptPresenceSubscriptionRequestFrom:currentRequstJID andAddToRoster:YES];
+    }
+}
 
 -(void)alert:(NSString*)msg
 {
     UIAlertView * alert=[[UIAlertView alloc] initWithTitle:@"info" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
 }
+
+
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self setupStream];//初始化xml流

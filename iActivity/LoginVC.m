@@ -27,7 +27,8 @@
 {
     [super viewDidLoad];
     
-    
+    nameField.text=[[NSUserDefaults standardUserDefaults] objectForKey:XMPP_LOG_NAME];
+    passwordField.text=[[NSUserDefaults standardUserDefaults] objectForKey:XMPP_LOG_PASSWORD];
 //    UILabel* label=[[UILabel alloc] initWithFrame:CGRectMake(32, 213, 280, 30)];
 //    label.backgroundColor=[UIColor yellowColor];
 //    [self.view addSubview:label];

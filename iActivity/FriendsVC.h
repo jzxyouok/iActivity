@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface FriendsVC : UIViewController
-
+#import <CoreData/CoreData.h>
+#import "ChatVC.h"
+@interface FriendsVC : UITableViewController <NSFetchedResultsControllerDelegate>
+{
+    
+}
 @end

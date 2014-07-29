@@ -10,8 +10,11 @@
 
 #import "XMPPFramework.h"
 
+@protocol XMPPMsgDelegate <NSObject>
+-(void)receivedMsgDict:(NSDictionary*)aDict;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@end
+@interface AppDelegate : UIResponder <UIApplicationDelegate,UIAlertViewDelegate>
 {
     XMPPStream *xmppStream;
 	XMPPReconnect *xmppReconnect;
@@ -28,8 +31,13 @@
     BOOL isXmppConnected;
     BOOL isRegister;
     
+    XMPPJID * currentRequstJID;
+    
+   __weak id<XMPPMsgDelegate> msgDelegate;
+    
     UITabBarController * rootTabBarVC;
 }
+@property(nonatomic,weak) id<XMPPMsgDelegate> msgDelegate;
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong, readonly) XMPPStream *xmppStream;
 @property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
@@ -43,4 +51,13 @@
 @property(nonatomic,retain) NSString* userJID,* password;
 @property(nonatomic,retain) UITabBarController * rootTabBarVC;
 - (BOOL)connect;
+
+- (NSManagedObjectContext *)managedObjectContext_roster;
+- (NSManagedObjectContext *)managedObjectContext_capabilities;
+
+//
+- (void)XMPPAddFriendWithJID:(NSString *)aJID;
+-(void)XMPPRemoveFriendWithJID:(NSString*)aJID;
+
+-(void)sendMsg:(NSString*)message;
 @end

@@ -1,18 +1,18 @@
 //
-//  RootTabBarVC.m
+//  AddFriendVC.m
 //  iActivity
 //
-//  Created by 伍 兵 on 14-7-24.
+//  Created by 伍 兵 on 14-7-26.
 //  Copyright (c) 2014年 伍 兵. All rights reserved.
 //
 
-#import "RootTabBarVC.h"
+#import "AddFriendVC.h"
 
-@interface RootTabBarVC ()
+@interface AddFriendVC ()
 
 @end
 
-@implementation RootTabBarVC
+@implementation AddFriendVC
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -26,9 +26,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
- 
-    //self.selectedIndex=1;
-    [APP setRootTabBarVC:self];
     // Do any additional setup after loading the view.
 }
 
@@ -37,7 +34,10 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+-(IBAction)addBtnClicked:(id)sender
+{
+    [APP XMPPAddFriendWithJID:jidTextField.text];
+}
 /*
 #pragma mark - Navigation
 

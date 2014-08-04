@@ -10,6 +10,11 @@
 #import "MsgTableView.h"
 #import "ChatViewCell.h"
 #import "InputToolBar.h"
+
+
+#define CELL_MIN_HEIGHT 44
+
+
 @interface ChatVC : UIViewController<XMPPMsgDelegate,UITableViewDataSource,UITableViewDelegate,InputToolBarDelegate>
 {
     IBOutlet MsgTableView* tableView;

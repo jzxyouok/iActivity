@@ -75,6 +75,38 @@
     }];
 }
 #pragma mark - msgDelegate
+-(void)addBtnClicked:(UIButton *)aBtn
+{
+    UIImagePickerController* picker=[[UIImagePickerController alloc] init];
+    picker.delegate=self;
+    picker.sourceType= UIImagePickerControllerSourceTypePhotoLibrary;
+    [self presentViewController:picker animated:YES completion:^{
+        NSLog(@"presented");
+    }];
+}
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:^{
+        NSLog(@"dismissed");
+    }];
+}
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
+{
+    //base64编码
+    NSString* imageString=[UIImageJPEGRepresentation(image, 0.2) base64EncodedString];
+    NSString* encodeString=[@"Base64" stringByAppendingString:imageString];
+    NSLog(@"encodeImageString:%@",encodeString);
+    //发送
+    [APP sendMsg:encodeString];
+    //
+    [self sendMsgDict:@{@"msg":encodeString,@"fromJID":@"",@"type":@"send"}];
+    
+    
+    [picker dismissViewControllerAnimated:YES completion:^{
+        NSLog(@"dismissed");
+        //[self updateHeadImage:image];
+    }];
+}
 -(void)receivedMsgDict:(NSDictionary *)aDict
 {
     [msgArray addObject:aDict];
@@ -106,7 +138,14 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary* msgDict=[msgArray objectAtIndex:indexPath.row];
-    CGSize size=[self sizeOfMsg:[msgDict objectForKey:@"msg"]];
+    NSString* msg=[msgDict objectForKey:@"msg"];
+    if([msg hasPrefix:@"Base64"])
+    {
+        NSData* imageData=[[msg substringFromIndex:6] base64DecodedData];
+        UIImage * image=[UIImage imageWithData:imageData];
+        return [self rectForImageSize:image.size isRight:YES].size.height+8;
+    }
+    CGSize size=[self sizeOfMsg:msg];
     return MAX(CELL_MIN_HEIGHT, size.height)+8;
 }
 -(UITableViewCell*)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -123,6 +162,28 @@
 #else
     ChatViewCell* cell=[tableView dequeueReusableCellWithIdentifier:@"chatCellID"];
     NSString* msg=[msgDict objectForKey:@"msg"];
+    //图片和语音
+    if([msg hasPrefix:@"Base64"])
+    {
+        NSData* imageData=[[msg substringFromIndex:6] base64DecodedData];
+        UIImage * image=[UIImage imageWithData:imageData];
+        if([[msgDict objectForKey:@"type"] isEqualToString:@"send"])
+        {
+            cell.leftHead.hidden=YES;
+            cell.contentBack.frame= [self rectForImageSize:image.size isRight:YES];
+        }
+        else
+        {
+            cell.rightHead.hidden=YES;
+            cell.contentBack.frame= [self rectForImageSize:image.size isRight:NO];
+
+        }
+        cell.contentBack.image=image;
+        return cell;
+    }
+    
+    
+    
     CGSize size=[self sizeOfMsg:msg];
     size=CGSizeMake(size.width, MAX(CELL_MIN_HEIGHT, size.height));
     cell.contentLabel.text=msg;
@@ -149,7 +210,25 @@
 #endif
     return cell;
 }
-
+-(CGRect)rectForImageSize:(CGSize)imgSize isRight:(BOOL)isRight
+{
+    CGRect rect;
+    CGSize needSize;
+    if(imgSize.width>imgSize.height)
+    {
+        needSize=CGSizeMake(160, 160.0/imgSize.width*imgSize.height);
+    }
+    else
+    {
+        needSize=CGSizeMake(160/imgSize.height*imgSize.width, 160);
+    }
+    if(isRight)
+        rect=CGRectMake(320-needSize.width-50, 4, needSize.width, needSize.height);
+    else
+        rect=CGRectMake(50, 4, needSize.width, needSize.height);
+    return rect;
+        
+}
 -(CGSize)sizeOfMsg:(NSString*)aMsg
 {
     NSDictionary* attriDict=@{NSFontAttributeName:[UIFont systemFontOfSize:15]};

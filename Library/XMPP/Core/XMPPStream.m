@@ -1113,7 +1113,8 @@ enum XMPPStreamConfig
 
 		// Notify delegates
 		[multicastDelegate xmppStreamWillConnect:self];
-
+        
+        NSLog(@"hostName:%@",hostName);
 		if ([hostName length] == 0)
 		{
 			// Resolve the hostName via myJID SRV resolution
@@ -1126,6 +1127,8 @@ enum XMPPStreamConfig
 			srvResultsIndex = 0;
 			
 			NSString *srvName = [XMPPSRVResolver srvNameFromXMPPDomain:[myJID_setByClient domain]];
+            NSLog(@"serverName:%@",srvName);
+            
 			
 			[srvResolver startWithSRVName:srvName timeout:TIMEOUT_SRV_RESOLUTION];
 			
@@ -1137,6 +1140,8 @@ enum XMPPStreamConfig
 			
 			state = STATE_XMPP_CONNECTING;
 			
+            NSLog(@"hostName:%@",hostName);
+            NSLog(@"hostPort:%d",hostPort);
 			NSError *connectErr = nil;
 			result = [self connectToHost:hostName onPort:hostPort withTimeout:XMPPStreamTimeoutNone error:&connectErr];
 			

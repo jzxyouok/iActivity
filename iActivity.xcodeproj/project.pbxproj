@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		D0C70452198FDAD600A234D7 /* bubbleRight.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C70450198FDAD600A234D7 /* bubbleRight.png */; };
 		D0C70453198FDAD600A234D7 /* bubbleLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C70451198FDAD600A234D7 /* bubbleLeft.png */; };
+		D0C8345419935F890024659D /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C8345119935F890024659D /* NSData+Base64.m */; };
+		D0C8345519935F890024659D /* NSString+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C8345319935F890024659D /* NSString+Base64.m */; };
 		D0DB9F0D1985E9E6004B237A /* GlobalDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DB9F0C1985E9E6004B237A /* GlobalDataManager.m */; };
 		D0DB9F101985F22A004B237A /* ChatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DB9F0F1985F22A004B237A /* ChatViewCell.m */; };
 		D0DB9F151985F3F9004B237A /* myHead.png in Resources */ = {isa = PBXBuildFile; fileRef = D0DB9F131985F3F9004B237A /* myHead.png */; };
@@ -186,6 +188,10 @@
 /* Begin PBXFileReference section */
 		D0C70450198FDAD600A234D7 /* bubbleRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleRight.png; sourceTree = "<group>"; };
 		D0C70451198FDAD600A234D7 /* bubbleLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleLeft.png; sourceTree = "<group>"; };
+		D0C8345019935F890024659D /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		D0C8345119935F890024659D /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		D0C8345219935F890024659D /* NSString+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Base64.h"; sourceTree = "<group>"; };
+		D0C8345319935F890024659D /* NSString+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Base64.m"; sourceTree = "<group>"; };
 		D0DB9F0B1985E9E6004B237A /* GlobalDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalDataManager.h; sourceTree = "<group>"; };
 		D0DB9F0C1985E9E6004B237A /* GlobalDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalDataManager.m; sourceTree = "<group>"; };
 		D0DB9F0E1985F22A004B237A /* ChatViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewCell.h; sourceTree = "<group>"; };
@@ -534,6 +540,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D0C8344F19935F890024659D /* Base64 */ = {
+			isa = PBXGroup;
+			children = (
+				D0C8345019935F890024659D /* NSData+Base64.h */,
+				D0C8345119935F890024659D /* NSData+Base64.m */,
+				D0C8345219935F890024659D /* NSString+Base64.h */,
+				D0C8345319935F890024659D /* NSString+Base64.m */,
+			);
+			path = Base64;
+			sourceTree = "<group>";
+		};
 		D0DB9F091985E678004B237A /* Friends */ = {
 			isa = PBXGroup;
 			children = (
@@ -673,6 +690,7 @@
 		D0E25628197FD78100F45365 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				D0C8344F19935F890024659D /* Base64 */,
 				D0E25629197FD78100F45365 /* XMPP */,
 			);
 			path = Library;
@@ -1603,6 +1621,7 @@
 				D0E257CD197FD78100F45365 /* XMPPCapsCoreDataStorageObject.m in Sources */,
 				D0E257B5197FD78100F45365 /* XMPPvCardTempCoreDataStorageObject.m in Sources */,
 				D0E257D3197FD78100F45365 /* XMPPMessageArchivingCoreDataStorage.m in Sources */,
+				D0C8345419935F890024659D /* NSData+Base64.m in Sources */,
 				D0E257A9197FD78100F45365 /* XMPPRoomMessageHybridCoreDataStorageObject.m in Sources */,
 				D0E257C0197FD78100F45365 /* XMPPIQ+XEP_0060.m in Sources */,
 				D0E257A8197FD78100F45365 /* XMPPRoomHybridStorage.m in Sources */,
@@ -1687,6 +1706,7 @@
 				D0E255F7197FCA8000F45365 /* main.m in Sources */,
 				D0E257F9197FD78100F45365 /* DDXMLNode.m in Sources */,
 				D0E257DD197FD78100F45365 /* XMPPAutoTime.m in Sources */,
+				D0C8345519935F890024659D /* NSString+Base64.m in Sources */,
 				D0E2578D197FD78100F45365 /* XMPPStream.m in Sources */,
 				D0E257D9197FD78100F45365 /* XMPPMessageDeliveryReceipts.m in Sources */,
 				D0E25792197FD78100F45365 /* XMPPReconnect.m in Sources */,

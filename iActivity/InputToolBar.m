@@ -22,6 +22,13 @@
 {
     [textField resignFirstResponder];
 }
+-(IBAction)addBtnClicked:(UIButton*)sender
+{
+    if([delegate respondsToSelector:@selector(addBtnClicked:)])
+    {
+        [delegate addBtnClicked:sender];
+    }
+}
 -(IBAction)sendBtnClicked:(id)sender
 {
     [APP  sendMsg:textField.text];

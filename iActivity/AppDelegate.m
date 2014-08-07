@@ -36,8 +36,11 @@
 
 - (void)setupStream
 {
+
 	// Setup xmpp stream
 	xmppStream = [[XMPPStream alloc] init];
+    //[xmppStream setHostName:@"10.0.0.131"];
+    //[xmppStream setHostPort:5222];
 #if !TARGET_IPHONE_SIMULATOR
 	{
 		xmppStream.enableBackgroundingOnSocket = YES;
@@ -144,6 +147,7 @@
         NSLog(@"connectError:%@",error);
 		return NO;
 	}
+     NSLog(@"connectError:%@",error);
 	return YES;
 }
 
@@ -207,6 +211,7 @@
 }
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
+    isXmppConnected=NO;
 	NSLog(@"did not authenticate with error:%@",error);
     //[self alert:@"登录失败!"];
     

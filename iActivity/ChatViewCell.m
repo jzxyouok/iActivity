@@ -23,6 +23,10 @@
 - (void)awakeFromNib
 {
     // Initialization code
+    contentBack.layer.cornerRadius=5;
+    contentBack.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    
+    contentBack.clipsToBounds=YES;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

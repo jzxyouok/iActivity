@@ -179,6 +179,7 @@
 
         }
         cell.contentBack.image=image;
+        cell.contentBack.layer.borderWidth=.5;
         return cell;
     }
     
@@ -206,7 +207,7 @@
         cell.contentBack.frame=CGRectMake(textRect.origin.x-15, textRect.origin.y-2, textRect.size.width+25, textRect.size.height+4);
         cell.contentBack.image=[[UIImage imageNamed:@"bubbleLeft.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:10];
     }
-    
+    cell.contentBack.layer.borderWidth=0;
 #endif
     return cell;
 }

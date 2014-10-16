@@ -9,7 +9,10 @@
 #import "MessageVC.h"
 
 @interface MessageVC ()
-
+{
+    NSMutableArray* hasMsgJID;
+    NSMutableDictionary * msgDict;
+}
 @end
 
 @implementation MessageVC
@@ -22,19 +25,73 @@
     }
     return self;
 }
-
+-(void)dataInit
+{
+    [super dataInit];
+    hasMsgJID=[[NSMutableArray alloc] init];
+    msgDict=[[NSMutableDictionary alloc] init];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+   
+    self.tableView.layer.borderWidth=2;
+    self.tableView.layer.borderColor=[UIColor blueColor].CGColor;
+    
+    
+    //弹出登录vc
     self.loginVC= [self.storyboard instantiateViewControllerWithIdentifier:@"LoginVC"];
     
     [self presentViewController:self.loginVC animated:YES completion:^{
         
     }];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNewMsg:) name:@"newMessage" object:nil];
     //[self performSegueWithIdentifier:@"login" sender:self];
     // Do any additional setup after loading the view.
 }
-
+-(void)handleNewMsg:(NSNotification*)notificaton
+{
+    NSLog(@"dict:%@",[notificaton object]);
+    NSDictionary* tmpDict=[[notificaton object] copy];
+    NSString* fromJID=[[tmpDict objectForKey:@"fromJID"] componentsSeparatedByString:@"/"][0];
+    NSString* msg=[tmpDict objectForKey:@"msg"];
+    if([msg hasPrefix:@"Base64"])
+        msg=@"[图片]";
+     //if([[dataCenter friendsArray] containsObject:fromJID])
+     {
+         [msgDict setObject:msg forKey:fromJID];
+         if([hasMsgJID containsObject:fromJID])
+         {
+             
+         }
+         else
+         {
+             [hasMsgJID addObject:fromJID];
+         }
+     }
+    
+    [self.tableView reloadData];
+    
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 56;
+}
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return hasMsgJID.count;
+}
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    MessageCell* cell=[tableView dequeueReusableCellWithIdentifier:@"MessageCell"];
+    cell.label.text= msgDict[hasMsgJID[indexPath.row]];
+    return cell;
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

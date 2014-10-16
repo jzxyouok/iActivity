@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="m24-br-fCu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="m24-br-fCu">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment defaultVersion="1808" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
-        <!--MessageVC-->
-        <scene sceneID="bBN-2x-ZN6">
-            <objects>
-                <viewController id="688-It-Wdc" customClass="MessageVC" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="r2S-oE-puM">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="1" green="0.38077565279999998" blue="0.22263780859999999" alpha="1" colorSpace="calibratedRGB"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Omk-Xe-yF0"/>
-                    <connections>
-                        <segue destination="hbu-SZ-sw8" kind="modal" identifier="login" id="24B-wq-3AP"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="nWp-Gh-LzX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4654" y="-1392"/>
-        </scene>
         <!--Root Tab BarVC-->
         <scene sceneID="hw7-TI-DEn">
             <objects>
@@ -93,6 +76,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.70340619900000001" green="1" blue="0.44144942050000002" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <navigationItem key="navigationItem" id="46B-jU-67H"/>
                     <connections>
                         <outlet property="alertLabel" destination="5wt-hl-a9h" id="eUG-yj-WKE"/>
                         <outlet property="nameField" destination="7GB-g8-k5X" id="HVz-WH-anj"/>
@@ -103,7 +87,7 @@
             </objects>
             <point key="canvasLocation" x="-4663" y="-2320"/>
         </scene>
-        <!--Navigation Controller - 消息-->
+        <!--消息-->
         <scene sceneID="OXT-U9-hFc">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nrW-jf-VX1" sceneMemberID="viewController">
@@ -115,14 +99,71 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="688-It-Wdc" kind="relationship" relationship="rootViewController" id="Qbx-0X-eSn"/>
+                        <segue destination="vpm-Ox-6Ey" kind="relationship" relationship="rootViewController" id="Wbd-an-46Q"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9IS-0u-Ev2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5180" y="-1392"/>
+            <point key="canvasLocation" x="-5106" y="-1394"/>
         </scene>
-        <!--Navigation Controller - 联系人-->
+        <!--MessageVC-->
+        <scene sceneID="ci3-3T-C6n">
+            <objects>
+                <tableViewController id="vpm-Ox-6Ey" customClass="MessageVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="55" sectionHeaderHeight="22" sectionFooterHeight="22" id="N36-JE-Z25">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageCell" rowHeight="56" id="gqg-Ij-4c0" customClass="MessageCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gqg-Ij-4c0" id="lWO-dJ-08M">
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="消息" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="paD-zv-5w7">
+                                            <rect key="frame" x="56" y="26" width="264" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qqHead.png" id="rbz-nc-hRM">
+                                            <rect key="frame" x="8" y="7" width="40" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tmH-pA-O6Q">
+                                            <rect key="frame" x="288" y="15" width="24" height="24"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="1" green="0.073618004081484667" blue="0.057084486882695518" alpha="1" colorSpace="calibratedRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="imgView" destination="rbz-nc-hRM" id="5te-Tg-7vy"/>
+                                    <outlet property="label" destination="paD-zv-5w7" id="oBM-O9-hWn"/>
+                                    <outlet property="msgCountLabel" destination="tmH-pA-O6Q" id="u7D-e4-Qpj"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="vpm-Ox-6Ey" id="7Wc-c1-Qka"/>
+                            <outlet property="delegate" destination="vpm-Ox-6Ey" id="W0p-o4-9fv"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="qsV-rk-hpn"/>
+                    <connections>
+                        <segue destination="hbu-SZ-sw8" kind="push" identifier="login" id="U8C-xB-HVR"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="F3y-YV-pts" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4712" y="-1394"/>
+        </scene>
+        <!--联系人-->
         <scene sceneID="GiA-QH-4IS">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mtb-tF-emu" sceneMemberID="viewController">
@@ -141,7 +182,7 @@
             </objects>
             <point key="canvasLocation" x="-5200" y="-572"/>
         </scene>
-        <!--FriendsVC - 好友列表-->
+        <!--好友列表-->
         <scene sceneID="8bs-iU-Y77">
             <objects>
                 <tableViewController id="Esj-X1-bM9" customClass="FriendsVC" sceneMemberID="viewController">

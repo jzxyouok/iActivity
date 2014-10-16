@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseTableVC.h"
+#import "MessageCell.h"
 #import "LoginVC.h"
-@interface MessageVC : UIViewController
+@interface MessageVC : BaseTableVC
 @property(nonatomic,retain) LoginVC* loginVC;
 @end

@@ -206,6 +206,7 @@
     UINavigationController* nav=[[self.rootTabBarVC viewControllers] objectAtIndex:0];
     MessageVC* messageVC=(MessageVC*)[nav topViewController];
     [messageVC.loginVC  dismissViewControllerAnimated:YES completion:^{
+        [GlobalDataManager sharedDataManager];
         
     }];
 }
@@ -250,15 +251,29 @@
     NSString *fromJID = [[message attributeForName:@"from"] stringValue];
     if(![fromJID isEqualToString:[[sender myJID] bare]])
     {
+        if(msg.length==0)
+            return;
         NSString* currentChatJID=[[GlobalDataManager sharedDataManager] currentChatJID];
          NSLog(@"receive Msg:%@ from:%@",msg,fromJID);
         //NSLog(@"currentJID:%@",currentChatJID);
-        if(currentChatJID&&msg&&[fromJID hasPrefix:currentChatJID])
+        NSDictionary* msgDict=@{@"msg": msg,@"fromJID":fromJID,@"type":@"receive"};
+
+        if(currentChatJID)//有当前聊天的好友
         {
-            [msgDelegate receivedMsgDict:@{@"msg": msg,@"fromJID":fromJID,@"type":@"receive"}];
-            
+            if([fromJID hasPrefix:currentChatJID])//新消息是当前聊天的好友
+            {
+                [msgDelegate receivedMsgDict:msgDict];
+            }
+            else
+            {
+                
+            }
         }
+        else
+        {
         
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"newMessage" object:msgDict];
     }
 }
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence

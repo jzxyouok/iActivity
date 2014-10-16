@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AppDelegate.h"
 
 @interface GlobalDataManager : NSObject
 @property(nonatomic,strong) NSString* currentChatJID;
-
+@property(nonatomic,strong) NSMutableArray * friendsArray;
 
 +(id)sharedDataManager;
 @end

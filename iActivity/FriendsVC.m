@@ -73,6 +73,7 @@
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    
 	return [[[self fetchedResultsController] sections] count];
 }
 
@@ -83,7 +84,6 @@
 	if (sectionIndex < [sections count])
 	{
 		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-        
 		int section = [sectionInfo.name intValue];
 		switch (section)
 		{
